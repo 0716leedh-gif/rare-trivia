@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RARE SCHOOL · Art Preview</title>
+<style>
+:root{--bg:none;--student:none;--ink:#f7f8ff;--muted:#aab5c7;--panel:#0c1422e8;--line:#34445d;--cyan:#5be2ff;--pink:#ff719b;--gold:#ffd463;--bad:#ff605f}
+*{box-sizing:border-box}html,body{margin:0;background:#070b13;color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{min-height:100vh}button,input{font:inherit}
+.wrap{max-width:1536px;margin:auto;padding:12px}
+.top{display:flex;justify-content:space-between;align-items:center;height:56px}.brand{font-size:28px;font-weight:1000;letter-spacing:.08em}.brand b{color:var(--cyan)}.chip{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:7px 11px;border-radius:999px}
+.stage{position:relative;min-height:820px;border:1px solid #314158;border-radius:20px;overflow:hidden;background-image:linear-gradient(180deg,rgba(5,8,13,.02),rgba(5,8,13,.13)),var(--bg);background-size:cover;background-position:center top;box-shadow:0 28px 75px #0008}
+.stage:after{content:"";position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(transparent,rgba(4,7,12,.56));pointer-events:none}
+.roomhud{position:absolute;z-index:10;left:18px;right:18px;top:14px;display:flex;justify-content:space-between;pointer-events:none}.hudbox{background:#0a1321e6;border:1px solid #3a4f6b;border-radius:12px;padding:9px 13px;box-shadow:0 8px 20px #0005}.hudbox small{display:block;color:var(--muted);font-size:9px;letter-spacing:.18em}.hudbox b{font-size:18px;letter-spacing:.12em;color:var(--cyan)}
+.boardText{position:absolute;z-index:5;left:33.7%;top:26.5%;width:31.5%;min-height:128px;padding:13px 18px;text-align:center;display:grid;align-content:center;color:#f1f4e9;text-shadow:1px 2px #0c211a}.boardText small{font-size:10px;color:#b5e2c6;letter-spacing:.2em;font-weight:1000}.boardText h1{font-size:clamp(18px,2vw,30px);line-height:1.24;margin:7px 0 5px}.boardText p{font-size:10px;color:#cce6d4;margin:0}
+.teacherGlow{position:absolute;z-index:4;left:31%;top:30%;width:180px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,70,70,0),transparent 70%);transition:.2s;pointer-events:none}.teacherGlow.warn{background:radial-gradient(circle,rgba(255,145,64,.22),transparent 72%)}.teacherGlow.angry{background:radial-gradient(circle,rgba(255,50,50,.52),transparent 72%);animation:pulse .35s infinite alternate}
+.bubble{position:absolute;z-index:11;left:24.8%;top:48%;padding:9px 13px;border-radius:13px;background:#fff;color:#192233;font-size:12px;font-weight:1000;box-shadow:0 7px 18px #0004}.bubble:after{content:"";position:absolute;right:24px;top:-8px;border:8px solid transparent;border-bottom-color:#fff;border-top:0}
+.students{position:absolute;z-index:7;left:2.2%;right:2.2%;bottom:145px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;align-items:end}.seat{position:relative;text-align:center;transition:.18s;min-width:0}.sprite{width:min(100%,180px);aspect-ratio:180/189;background-image:var(--student);background-size:contain;background-position:center bottom;background-repeat:no-repeat;margin:auto;filter:drop-shadow(0 15px 14px #0006);transition:.16s}.seat.active{transform:translateY(-12px)}.seat.active .sprite{filter:drop-shadow(0 0 6px var(--cyan)) drop-shadow(0 15px 14px #0007)}.seat.active:before{content:"▼";position:absolute;left:50%;transform:translateX(-50%);top:-20px;color:var(--gold);font-size:21px;text-shadow:0 2px #000;animation:bob .55s infinite alternate}.seat.warn .sprite{filter:sepia(.16) saturate(1.45) hue-rotate(-12deg) drop-shadow(0 0 7px #ff9469)}.seat.panic .sprite{filter:sepia(.32) saturate(2.1) hue-rotate(-22deg) drop-shadow(0 0 11px #ff4b52)}.seat.timeout{animation:shake .13s linear 7}.seat.dead{opacity:.28;filter:grayscale(1)}.name{margin-top:-3px;font-size:12px;font-weight:1000;text-shadow:0 2px 4px #000}.life{font-size:15px;letter-spacing:2px}
+.answerResult{position:absolute;z-index:12;left:50%;transform:translateX(-50%);bottom:238px;min-width:280px;text-align:center;background:#0a1220e8;border:1px solid #3d526e;border-radius:15px;padding:10px 18px;opacity:0;transition:.18s}.answerResult.show{opacity:1;transform:translateX(-50%) translateY(-5px)}.answerResult b{font-size:19px}.answerResult small{display:block;margin-top:3px;color:var(--muted)}
+.dock{position:absolute;z-index:12;left:4%;right:4%;bottom:18px;display:grid;grid-template-columns:92px 1fr 110px;gap:10px;align-items:center}.timer{width:82px;height:82px;border-radius:50%;padding:5px;background:conic-gradient(var(--cyan) var(--pct,100%),#223047 0);box-shadow:0 0 0 1px #4a607b}.timer>div{width:72px;height:72px;border-radius:50%;background:#08101c;display:grid;place-items:center;text-align:center}.timer b{font-size:23px}.timer small{display:block;font-size:8px;color:var(--muted)}.form{display:grid;grid-template-columns:1fr 100px;gap:8px}.form input{min-width:0;background:#08101ce8;border:1px solid #3b506b;color:#fff;padding:16px;border-radius:13px;font-size:16px}.form button,.reset{border:0;border-radius:13px;padding:16px;font-weight:1000}.form button{background:linear-gradient(90deg,var(--pink),var(--cyan));color:#07111a}.reset{background:#0d1727;color:#fff;border:1px solid #3b4b63}
+.sideLog{position:absolute;z-index:11;right:18px;top:82px;width:235px;max-height:310px;overflow:auto;background:#0a1321e9;border:1px solid #3a4f6b;border-radius:15px;padding:12px}.sideLog h3{font-size:10px;letter-spacing:.16em;margin:0 0 8px;color:#bfccdc}.entry{font-size:11px;color:#d8e1ee;padding:7px 0;border-bottom:1px solid #ffffff12}.entry:last-child{border:0}
+@keyframes bob{to{transform:translate(-50%,-6px)}}@keyframes pulse{to{transform:scale(1.15)}}@keyframes shake{0%{transform:translateX(-5px)}50%{transform:translateX(5px)}100%{transform:translateX(0)}}
+@media(max-width:980px){.stage{min-height:760px;background-size:auto 620px;background-repeat:no-repeat;background-position:center top}.sideLog{display:none}.students{gap:2px;left:0;right:0}.sprite{width:min(100%,145px)}.boardText{left:32%;width:36%}}
+@media(max-width:650px){.wrap{padding:6px}.stage{min-height:720px}.boardText{left:29%;width:43%;top:25.5%}.boardText h1{font-size:16px}.bubble{left:13%;top:47%}.students{bottom:150px}.name{font-size:9px}.life{font-size:11px}.dock{grid-template-columns:68px 1fr 76px;left:6px;right:6px}.timer{width:62px;height:62px}.timer>div{width:52px;height:52px}.timer b{font-size:17px}.form{grid-template-columns:1fr 72px}.form input,.form button,.reset{padding:12px 8px}}
+</style>
+</head><body>
+<div class="wrap"><div class="top"><div class="brand">RARE <b>SCHOOL</b></div><div class="chip">ART DIRECTION PREVIEW · 6 SEATS IN ONE ROW</div></div>
+<div class="stage" id="stage">
+ <div class="roomhud"><div class="hudbox"><small>PRIVATE CLASS</small><b>3-2A</b></div><div class="hudbox"><small>FLOATING</small><b id="floating">6 / 6</b></div></div>
+ <div class="boardText"><small id="category">CATEGORY 1</small><h1 id="question">한국 아이돌 그룹을 말하세요</h1><p>이미 나온 답은 같은 문제에서 다시 사용할 수 없습니다.</p></div>
+ <div id="teacherGlow" class="teacherGlow"></div><div id="bubble" class="bubble">DONGHYUK, 네 차례다.</div>
+ <div class="sideLog"><h3>CLASS LOG</h3><div id="log"><div class="entry">› 수업이 시작되었습니다.</div></div></div>
+ <div id="result" class="answerResult"><b id="resultBig">RARE!</b><small id="resultSub">+15 ⚡</small></div>
+ <div id="students" class="students"></div>
+ <div class="dock"><div id="timer" class="timer" style="--pct:100%"><div><div><b id="seconds">10.0</b><small>SECONDS</small></div></div></div><form id="form" class="form"><input id="answer" autocomplete="off" placeholder="답변을 입력하세요"><button>제출</button></form><button id="reset" class="reset">다시</button></div>
+</div></div>
+<script>
+async function loadAssets(){
+  const get = p => fetch(p,{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error(p);return r.text()});
+  const [b1,b2,b3,b4,s1,s2] = await Promise.all([
+    get("assets/bg1.txt"),get("assets/bg2.txt"),get("assets/bg3.txt"),get("assets/bg4.txt"),
+    get("assets/student1.txt"),get("assets/student2.txt")
+  ]);
+  document.documentElement.style.setProperty("--bg",`url("data:image/webp;base64,${b1+b2+b3+b4}")`);
+  document.documentElement.style.setProperty("--student",`url("data:image/webp;base64,${s1+s2}")`);
+}
+const Q=[["방탄소년단","COMMON"],["블랙핑크","COMMON"],["에스파","UNCOMMON"],["세븐틴","UNCOMMON"],["샤이니","RARE"],["비투비","EPIC"],["크나큰","UNIQUE"]];
+const N=["DONGHYUK","MIN","JUN","SOO","JAY","HAN"];let turn=0,lives=[2,2,2,2,2,2],deadline=0,timer=null,locked=false,lastTimeout=-1,used=new Set();
+const $=id=>document.getElementById(id);
+function hearts(n){return "♥".repeat(Math.max(0,n))+"♡".repeat(Math.max(0,2-n))}
+function draw(){let left=Math.max(0,(deadline-performance.now())/1000);$("students").innerHTML=N.map((n,i)=>`<div class="seat ${i===turn?"active":""} ${lives[i]<=0?"dead":""}" data-i="${i}"><div class="sprite"></div><div class="name">${n}${i===0?" · YOU":""}</div><div class="life">${hearts(lives[i])}</div></div>`).join("");if(lastTimeout>=0){let e=document.querySelector(`[data-i="${lastTimeout}"]`);if(e)e.classList.add("timeout");lastTimeout=-1}}
+function start(){clearInterval(timer);locked=false;deadline=performance.now()+10000;$("answer").value="";$("answer").disabled=turn!==0;$("bubble").textContent=N[turn]+", 네 차례다.";$("teacherGlow").className="teacherGlow";draw();timer=setInterval(tick,50);if(turn!==0)setTimeout(bot,1200+Math.random()*1500);else $("answer").focus()}
+function tick(){let left=Math.max(0,deadline-performance.now()),s=left/1000;$("seconds").textContent=s.toFixed(1);$("timer").style.setProperty("--pct",(left/10000*100)+"%");let seat=document.querySelector(`[data-i="${turn}"]`);document.querySelectorAll(".seat").forEach(e=>e.classList.remove("warn","panic"));if(s<=2.5){$("teacherGlow").className="teacherGlow angry";$("bubble").textContent="빨리! 시간 없어!";if(seat)seat.classList.add("panic")}else if(s<=5.5){$("teacherGlow").className="teacherGlow warn";$("bubble").textContent=N[turn]+", 빨리 생각해!";if(seat)seat.classList.add("warn")}if(left<=0)timeout()}
+function next(){do{turn=(turn+1)%6}while(lives[turn]<=0&&lives.some(x=>x>0));start()}
+function timeout(){if(locked)return;locked=true;clearInterval(timer);lives[turn]--;lastTimeout=turn;$("teacherGlow").className="teacherGlow angry";$("bubble").textContent=N[turn]+"! 시간 초과!";show("TIME OUT","라이프 -1");log(N[turn]+" 시간 초과 · LIFE -1");draw();setTimeout(next,1000)}
+function show(a,b){$("resultBig").textContent=a;$("resultSub").textContent=b;$("result").classList.add("show");setTimeout(()=>$("result").classList.remove("show"),800)}
+function log(t){$("log").insertAdjacentHTML("afterbegin",`<div class="entry">› ${t}</div>`)}
+function submit(v){if(turn!==0||locked)return;let n=v.toLowerCase().replace(/\s/g,"");let hit=Q.find(([a])=>a.toLowerCase().replace(/\s/g,"")===n);if(!hit){show("NOT ACCEPTED","시간은 계속 흐릅니다.");$("answer").select();return}if(used.has(hit[0])){show("ALREADY TAKEN","다른 답을 입력하세요.");return}used.add(hit[0]);locked=true;clearInterval(timer);let pts={COMMON:5,UNCOMMON:10,RARE:15,EPIC:20,UNIQUE:25}[hit[1]];show(hit[0],hit[1]+" · +"+pts+" ⚡");log("DONGHYUK: "+hit[0]+" · "+hit[1]);setTimeout(next,850)}
+function bot(){if(locked||turn===0)return;if(Math.random()<.18)return;let pool=Q.filter(x=>!used.has(x[0]));if(!pool.length)return;let hit=pool[Math.floor(Math.random()*pool.length)];used.add(hit[0]);locked=true;clearInterval(timer);show(hit[0],hit[1]);log(N[turn]+": "+hit[0]+" · "+hit[1]);setTimeout(next,850)}
+$("form").addEventListener("submit",e=>{e.preventDefault();submit($("answer").value.trim())});$("reset").addEventListener("click",()=>{turn=0;lives=[2,2,2,2,2,2];used.clear();start()});loadAssets().then(()=>{draw();start()}).catch(err=>{console.error(err);$("bubble").textContent="에셋 로딩 실패 · 새로고침해주세요";});
+</script></body></html>
