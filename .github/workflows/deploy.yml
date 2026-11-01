@@ -23,29 +23,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Repair embedded classroom asset
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-          marker = '--scene:url(data:image/webp;base64,'
-          start = s.find(marker)
-          if start < 0:
-              raise SystemExit('Classroom image start marker not found')
-          end = s.find(');--', start)
-          if end < 0:
-              raise SystemExit('Classroom image end marker not found')
-          open_at = s.find('url(', start)
-          payload_start = open_at + len('url(')
-          payload = s[payload_start:end]
-          repaired = s[:payload_start] + '"' + payload + '"' + s[end:]
-          p.write_text(repaired, encoding='utf-8')
-          print('Repaired classroom asset:', len(payload), 'characters')
-          PY
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site
