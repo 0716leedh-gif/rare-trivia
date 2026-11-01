@@ -23,6 +23,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Repair embedded classroom asset
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s, count = re.subn(
+              r'--scene:url\((data:image/webp;base64,[A-Za-z0-9+/=]+)\)',
+              r'--scene:url("\1")',
+              s,
+              count=1,
+          )
+          if count != 1:
+              raise SystemExit('Embedded classroom image declaration was not found')
+          p.write_text(s, encoding='utf-8')
+          PY
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site
