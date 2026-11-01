@@ -1,1 +1,56 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RARE Trivia</title><style>*{box-sizing:border-box}body{margin:0;background:#070912;color:#fff;font-family:system-ui,-apple-system,sans-serif;min-height:100vh;display:grid;place-items:center}.app{width:min(760px,94vw);text-align:center}.logo{font-size:clamp(64px,14vw,120px);font-weight:1000;letter-spacing:-.08em}.logo b{color:#55ddff}.tag{color:#aeb8ca;font-size:20px;margin:16px 0 42px}.card{background:#111725;border:1px solid #273149;border-radius:28px;padding:28px}.category{color:#55ddff;font-size:12px;font-weight:900;letter-spacing:.18em}.q{font-size:30px;font-weight:900;margin:12px 0 25px}.timer{font-size:80px;font-weight:1000}.status{display:flex;justify-content:space-between;margin:20px 0}.bar{height:10px;background:#090c14;border-radius:20px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#765cff,#55ddff)}form{display:grid;grid-template-columns:1fr 100px;gap:10px;margin-top:28px}input,button{border-radius:16px;padding:17px;font:inherit}input{background:#090d17;color:white;border:1px solid #34415c}button{border:0;background:#fff;color:#090b12;font-weight:900;cursor:pointer}.result{height:70px;display:grid;place-items:center;font-size:23px;font-weight:1000}.small{color:#8995aa;font-size:13px;margin-top:18px}</style></head><body><main class="app"><div class="logo">RARE<b>:</b></div><div class="tag">남들이 생각하지 못한 답을 찾아라.</div><section class="card"><div class="category">CATEGORY · K-POP</div><div class="q">한국 아이돌 그룹을 말하세요</div><div id="timer" class="timer">10.0</div><div id="result" class="result">YOUR TURN</div><div class="status"><span id="life">❤️❤️</span><span id="gt">⚡ 0 / 100</span></div><div class="bar"><div id="fill" class="fill"></div></div><form id="f"><input id="a" autofocus autocomplete="off" placeholder="답변 입력"><button>제출</button></form><div class="small">RARE Survival Trivia · Web Alpha</div></section></main><script>const data={"방탄소년단":["bts","방탄","방탄소년단","COMMON",5],"블랙핑크":["blackpink","블랙핑크","COMMON",5],"세븐틴":["seventeen","세븐틴","UNCOMMON",10],"샤이니":["shinee","샤이니","RARE",15],"틴탑":["teentop","틴탑","EPIC",20],"크나큰":["knk","크나큰","UNIQUE",25]};let life=2,g=0,end=performance.now()+10000,used=new Set();const $=x=>document.getElementById(x),norm=s=>s.toLowerCase().replace(/\s/g,'');function reset(){end=performance.now()+10000}function render(){$('life').textContent='❤️'.repeat(life)+'🖤'.repeat(Math.max(0,3-life));$('gt').textContent='⚡ '+g+' / 100';$('fill').style.width=g+'%'}setInterval(()=>{let n=Math.max(0,(end-performance.now())/1000);$('timer').textContent=n.toFixed(1);if(n<=0){life--;$('result').textContent='TIME OUT · LIFE -1';if(life<=0){life=2;g=0;used.clear();$('result').textContent='GAME OVER · 다시 시작'}render();reset()}},50);$('f').onsubmit=e=>{e.preventDefault();let v=norm($('a').value),hit=null,name='';for(const [k,x] of Object.entries(data)){if(x.slice(0,-2).some(z=>norm(z)===v)){hit=x;name=k;break}}if(!hit){$('result').textContent='NOT ACCEPTED · 시간은 계속';$('a').select();return}if(used.has(name)){$('result').textContent='ALREADY TAKEN';$('a').select();return}used.add(name);let rarity=hit[hit.length-2],pts=hit[hit.length-1];g+=pts;if(g>=100&&life<3){g-=100;life++}g=Math.min(100,g);$('result').textContent=name+' · '+rarity+' +'+pts+'⚡';$('a').value='';render();reset()};render()</script></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07101b">
+<title>RARE — Rare Answer Trivia</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+<header class="topbar"><div class="brand" onclick="goHome()">RARE<i>:</i></div><div class="topactions"><button class="ghost" onclick="openRules()">게임 방법</button><button class="ghost" onclick="goHome()">홈</button></div></header>
+
+<section id="home" class="screen active">
+ <div class="hero"><div class="eyebrow">OPEN-ANSWER · RARITY TRIVIA</div><div class="wordmark">RARE<i>:</i></div><div class="tagline">정답보다, 남들이 떠올리지 못한 정답.</div></div>
+ <div class="dailyCard">
+  <div class="dailyTop"><div><div class="eyebrow">TODAY'S CHALLENGE</div><h2>오늘의 7문제</h2><p>모두 같은 문제 · 자유입력 · 희귀할수록 높은 점수</p></div><div id="dateBadge" class="badge"></div></div>
+  <div class="heroButtons"><button class="primary" onclick="startDaily()">오늘의 게임 시작</button><button class="secondary" onclick="startUnlimited()">무제한 연습</button></div>
+ </div>
+ <div class="modeGrid">
+  <div class="mode" onclick="startSurvival()"><div class="modeIcon">⚡</div><h3>Survival</h3><p>우리 게임의 핵심. 턴제로 답을 소모하며 마지막 1명까지 생존.</p></div>
+  <div class="mode" onclick="showScreen('themes')"><div class="modeIcon">🧩</div><h3>Theme Packs</h3><p>K-POP, 음식, 세계, 스포츠 등 원하는 분야만 7문제.</p></div>
+  <div class="mode" onclick="showRoom()"><div class="modeIcon">👥</div><h3>Friend Room</h3><p>방 코드와 로비 흐름을 먼저 구현. 현재 알파는 로컬 데모.</p></div>
+  <div class="mode" onclick="openRules()"><div class="modeIcon">📖</div><h3>How to Play</h3><p>자유입력, 희귀도, 라이프와 게이지 규칙을 한눈에 확인.</p></div>
+ </div>
+ <div class="statsbar"><div class="stat"><b id="streak">0</b><span>DAILY STREAK</span></div><div class="stat"><b id="best">0</b><span>BEST DAILY</span></div><div class="stat"><b id="runs">0</b><span>TOTAL RUNS</span></div><div class="stat"><b id="wins">0</b><span>SURVIVAL WINS</span></div></div>
+</section>
+
+<section id="game" class="screen">
+ <div class="gameShell">
+  <aside id="leftSide" class="side"><h3>STATUS</h3><div id="modeStatus"></div><div id="roster" style="margin-top:14px"></div></aside>
+  <main class="gameCard">
+   <div class="gameHead"><div><div id="roundLabel" class="roundLabel"></div><div id="modeName" style="font-size:12px;color:var(--muted);margin-top:4px"></div></div><div class="scoreBox"><b id="score">0</b><span id="scoreLabel">RARE SCORE</span></div></div>
+   <div class="prompt"><div id="cat" class="cat"></div><h1 id="question"></h1><div id="hint" class="hint"></div></div>
+   <div id="preview" class="preview"></div><div id="timer" class="timer">25.0</div>
+   <div id="answerStage" class="answerStage"><div><div id="answerName" class="answerName"></div><div id="rarity" class="rarity"></div></div></div>
+   <form id="answerForm" class="form"><input id="answerInput" autocomplete="off" placeholder="답변을 입력하세요"><button>제출</button></form>
+   <div id="progress" class="progress"></div>
+  </main>
+  <aside class="side"><h3>ANSWER LOG</h3><div id="history"></div></aside>
+ </div>
+</section>
+
+<section id="results" class="screen"><div class="resultsCard"><div class="resultHero"><div class="eyebrow">RUN COMPLETE</div><div id="resultBig" class="big"></div><p id="resultText"></p></div><div id="resultRows" class="resultRows"></div><div class="resultActions"><button class="primary" onclick="shareResult()">결과 복사</button><button class="secondary" onclick="goHome()">홈으로</button></div></div></section>
+
+<section id="themes" class="screen"><div class="themesCard"><div class="eyebrow">THEME PACKS</div><h1 class="sectionTitle">좋아하는 분야만 플레이</h1><p class="sectionSub">각 팩은 7개의 자유입력 문제로 구성된다. 지금은 알파용 샘플 데이터다.</p><div id="themeGrid" class="themeGrid"></div></div></section>
+
+<section id="room" class="screen"><div class="roomCard"><div class="roomLayout"><div><div class="eyebrow">PRIVATE ROOM · LOCAL ALPHA</div><div class="roomCode">RARE-624</div><p class="sectionSub">실제 온라인 서버 연결 전, 로비와 게임 흐름을 먼저 테스트한다.</p><div id="roomPlayers" class="roomPlayers"></div><button class="primary" style="width:100%" onclick="startRoomDemo()">6인 데모 시작</button></div><div><div class="notice"><b>현재 되는 것</b><br>방 화면, 6인 턴 순환, 답변 소모, 라이프, 게이지, Final Duel.<br><br><b>다음 서버 단계</b><br>친구가 링크를 눌러 각자 폰/PC에서 같은 방에 들어오는 실제 멀티플레이.</div></div></div></div></section>
+</div>
+
+<div id="rulesModal" class="modalWrap" onclick="if(event.target===this)closeRules()"><div class="modal"><button class="ghost" style="float:right" onclick="closeRules()">닫기</button><h2>RARE 게임 방법</h2><div class="rules"><b>Daily / Theme</b><br>7문제를 플레이한다. 문제를 먼저 읽은 뒤 자유롭게 정답을 입력한다. 정답은 여러 개가 가능하고, 덜 흔한 정답일수록 높은 희귀도와 점수를 받는다. 틀린 답은 시간이 남아 있으면 다시 입력할 수 있다.<br><br><b>Survival</b><br>플레이어가 한 명씩 10초 동안 답한다. 같은 문제에서 이미 나온 답은 다시 사용할 수 없다. 시간 내 유효한 답을 못 내면 라이프 1개를 잃는다. 희귀 답변은 게이지를 채우며 100이 되면 라이프를 회복한다. 마지막 2명이 남으면 Final Duel로 7초 턴이 된다.<br><br><b>희귀도</b><br>COMMON +5 · UNCOMMON +10 · RARE +15 · EPIC +20 · UNIQUE +25. 실제 서비스에서는 주간 전체 사용량으로 희귀도를 재계산하고, 그 주 최초 UNIQUE 발견에는 THE ONE AND ONLY 보너스를 적용할 예정이다.</div></div></div>
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
