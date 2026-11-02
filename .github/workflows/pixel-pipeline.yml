@@ -23,13 +23,13 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Validate and compile bald student with Pixelbolt
+      - name: Compile, validate and render bald student with Pixelbolt
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p artifacts/pixelbolt
-          npx -y pixelbolt@0.11.0 validate tools/pixel/rare-student.poses.json
           npx -y pixelbolt@0.11.0 compile tools/pixel/rare-student.poses.json --out artifacts/pixelbolt/rare-student.json
+          npx -y pixelbolt@0.11.0 validate artifacts/pixelbolt/rare-student.json
           npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/rare-student.json --out artifacts/pixelbolt/rendered
           find artifacts/pixelbolt -maxdepth 3 -type f -print
 
