@@ -1,0 +1,69 @@
+name: Pixel art pipeline experiment
+
+on:
+  push:
+    branches: [experiment/pixel-pipeline]
+    paths:
+      - 'tools/pixel/**'
+      - '.github/workflows/pixel-pipeline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-pixel-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RARE SCHOOL experiment
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate and compile bald student with Pixelbolt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/pixelbolt
+          npx -y pixelbolt@0.11.0 validate tools/pixel/rare-student.poses.json
+          npx -y pixelbolt@0.11.0 compile tools/pixel/rare-student.poses.json --out artifacts/pixelbolt/rare-student.json
+          npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/rare-student.json --out artifacts/pixelbolt/rendered
+          find artifacts/pixelbolt -maxdepth 3 -type f -print
+
+      - name: Checkout PixelFX 0.3.0 source at pinned commit
+        uses: actions/checkout@v6
+        with:
+          repository: patch-gg/pixelfx
+          ref: a84159688af3ca37a4be05a0d422b94451b2e24e
+          path: .vendor/pixelfx
+
+      - name: Render RARE SCHOOL candidate VFX
+        shell: bash
+        working-directory: .vendor/pixelfx
+        run: |
+          set -euo pipefail
+          npm ci
+          node tools/render.mjs ui/countdown --gif
+          node tools/render.mjs ui/heart-lost --gif
+          node tools/render.mjs ui/confetti --gif
+          find records -maxdepth 4 -type f -print
+
+      - name: Collect PixelFX outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/pixelfx
+          if [ -d .vendor/pixelfx/records ]; then
+            cp -R .vendor/pixelfx/records/. artifacts/pixelfx/
+          fi
+          find artifacts -maxdepth 5 -type f -print
+
+      - name: Upload experiment outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: rare-school-pixel-pipeline
+          path: artifacts/
+          if-no-files-found: error
