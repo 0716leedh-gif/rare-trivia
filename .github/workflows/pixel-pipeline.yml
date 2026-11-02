@@ -25,16 +25,27 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Compile, validate and render bald student with Pixelbolt
+      - name: Compile, validate and render RARE SCHOOL Pixelbolt assets
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/pixelbolt
-          npx -y pixelbolt@0.11.0 compile tools/pixel/rare-student.poses.json --out artifacts/pixelbolt/rare-student.json
-          npx -y pixelbolt@0.11.0 validate artifacts/pixelbolt/rare-student.json
-          npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/rare-student.json --out artifacts/pixelbolt/rendered
-          test -s artifacts/pixelbolt/rendered/frames/stand.png
-          test -s artifacts/pixelbolt/rendered/rare-school-bald-student.png
+          mkdir -p artifacts/pixelbolt/student artifacts/pixelbolt/teacher artifacts/pixelbolt/desks
+
+          npx -y pixelbolt@0.11.0 compile tools/pixel/rare-student.poses.json --out artifacts/pixelbolt/student/source.json
+          npx -y pixelbolt@0.11.0 validate artifacts/pixelbolt/student/source.json
+          npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/student/source.json --out artifacts/pixelbolt/student/rendered
+          test -s artifacts/pixelbolt/student/rendered/frames/stand.png
+          test -s artifacts/pixelbolt/student/rendered/rare-school-bald-student.png
+
+          npx -y pixelbolt@0.11.0 compile tools/pixel/rare-teacher.poses.json --out artifacts/pixelbolt/teacher/source.json
+          npx -y pixelbolt@0.11.0 validate artifacts/pixelbolt/teacher/source.json
+          npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/teacher/source.json --out artifacts/pixelbolt/teacher/rendered
+          for state in idle point warn angry shout; do test -s "artifacts/pixelbolt/teacher/rendered/frames/$state.png"; done
+
+          npx -y pixelbolt@0.11.0 compile tools/pixel/rare-desks.poses.json --out artifacts/pixelbolt/desks/source.json
+          npx -y pixelbolt@0.11.0 validate artifacts/pixelbolt/desks/source.json
+          npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/desks/source.json --out artifacts/pixelbolt/desks/rendered
+          for skin in basic car plane throne; do test -s "artifacts/pixelbolt/desks/rendered/frames/$skin.png"; done
 
       - name: Checkout PixelFX 0.3.0 source at pinned commit
         uses: actions/checkout@v6
@@ -69,32 +80,42 @@ jobs:
             cp -R .vendor/pixelfx/records/. artifacts/pixelfx/records/
           fi
           cp -R .vendor/pixelfx/sheets/ui artifacts/pixelfx/sheets/
-          find artifacts -maxdepth 6 -type f -print
+          find artifacts -maxdepth 7 -type f -print
 
       - name: Publish generated assets to experiment branch
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p assets/pixelbolt
-          cp artifacts/pixelbolt/rendered/frames/stand.png assets/pixelbolt/student_idle.png
-          cp artifacts/pixelbolt/rendered/frames/idle-inhale.png assets/pixelbolt/student_idle_inhale.png
-          cp artifacts/pixelbolt/rendered/frames/idle-exhale.png assets/pixelbolt/student_idle_exhale.png
-          cp artifacts/pixelbolt/rendered/frames/hurt-recoil.png assets/pixelbolt/student_hurt_recoil.png
-          cp artifacts/pixelbolt/rendered/frames/hurt-recover.png assets/pixelbolt/student_hurt_recover.png
-          cp artifacts/pixelbolt/rendered/rare-school-bald-student.png assets/pixelbolt/rare-school-bald-student.png
-          cp artifacts/pixelbolt/rendered/rare-school-bald-student.atlas.json assets/pixelbolt/rare-school-bald-student.atlas.json
+
+          cp artifacts/pixelbolt/student/rendered/frames/stand.png assets/pixelbolt/student_idle.png
+          cp artifacts/pixelbolt/student/rendered/frames/idle-inhale.png assets/pixelbolt/student_idle_inhale.png
+          cp artifacts/pixelbolt/student/rendered/frames/idle-exhale.png assets/pixelbolt/student_idle_exhale.png
+          cp artifacts/pixelbolt/student/rendered/frames/hurt-recoil.png assets/pixelbolt/student_hurt_recoil.png
+          cp artifacts/pixelbolt/student/rendered/frames/hurt-recover.png assets/pixelbolt/student_hurt_recover.png
+          cp artifacts/pixelbolt/student/rendered/rare-school-bald-student.png assets/pixelbolt/rare-school-bald-student.png
+          cp artifacts/pixelbolt/student/rendered/rare-school-bald-student.atlas.json assets/pixelbolt/rare-school-bald-student.atlas.json
+
+          for state in idle point warn angry shout; do
+            cp "artifacts/pixelbolt/teacher/rendered/frames/$state.png" "assets/pixelbolt/teacher_$state.png"
+          done
+          for skin in basic car plane throne; do
+            cp "artifacts/pixelbolt/desks/rendered/frames/$skin.png" "assets/pixelbolt/desk_$skin.png"
+          done
+
           for fx in countdown heart-lost confetti; do
             mkdir -p "assets/pixelfx/ui/$fx"
             cp "artifacts/pixelfx/sheets/ui/$fx.png" "assets/pixelfx/ui/$fx/$fx.png"
             cp "artifacts/pixelfx/sheets/ui/$fx.json" "assets/pixelfx/ui/$fx/$fx.json"
           done
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/pixelbolt assets/pixelfx/ui
           if git diff --cached --quiet; then
             echo "Generated assets unchanged"
           else
-            git commit -m "Generate Pixelbolt sprites and PixelFX sheets"
+            git commit -m "Generate student teacher desk sprites and PixelFX sheets"
             git push origin HEAD:experiment/pixel-pipeline
           fi
 
