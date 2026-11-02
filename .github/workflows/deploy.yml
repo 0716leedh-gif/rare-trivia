@@ -23,12 +23,45 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Rebuild classroom image as a real binary asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat assets/bg1.txt assets/bg2.txt assets/bg3.txt assets/bg4.txt | tr -d '\n\r\t ' | base64 --decode > assets/classroom.webp
+          test -s assets/classroom.webp
+          size=$(wc -c < assets/classroom.webp)
+          echo "classroom.webp size: $size bytes"
+          if [ "$size" -lt 10000 ]; then
+            echo "classroom.webp is unexpectedly small" >&2
+            exit 1
+          fi
+          sig=$(xxd -p -l 4 assets/classroom.webp)
+          riff=$(xxd -p -s 8 -l 4 assets/classroom.webp)
+          echo "signature: $sig / $riff"
+          if [ "$sig" != "52494646" ] || [ "$riff" != "57454250" ]; then
+            echo "Invalid WebP signature" >&2
+            exit 1
+          fi
+          file assets/classroom.webp
+          cat > assets/scene.js <<'JS'
+          window.addEventListener('DOMContentLoaded', () => {
+            const img = document.getElementById('sceneImg');
+            if (!img) return;
+            img.onload = () => console.log('RARE classroom asset loaded', img.naturalWidth, img.naturalHeight);
+            img.onerror = (e) => console.error('RARE classroom image failed to load', e);
+            img.src = 'assets/classroom.webp?v=1';
+          });
+          JS
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
           path: .
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
