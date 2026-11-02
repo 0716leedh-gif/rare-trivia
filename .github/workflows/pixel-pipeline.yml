@@ -31,7 +31,9 @@ jobs:
           npx -y pixelbolt@0.11.0 compile tools/pixel/rare-student.poses.json --out artifacts/pixelbolt/rare-student.json
           npx -y pixelbolt@0.11.0 validate artifacts/pixelbolt/rare-student.json
           npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/rare-student.json --out artifacts/pixelbolt/rendered
-          find artifacts/pixelbolt -maxdepth 3 -type f -print
+          test -s artifacts/pixelbolt/rendered/frames/stand.png
+          test -s artifacts/pixelbolt/rendered/rare-school-bald-student.png
+          find artifacts/pixelbolt -maxdepth 4 -type f -print
 
       - name: Checkout PixelFX 0.3.0 source at pinned commit
         uses: actions/checkout@v6
@@ -40,7 +42,7 @@ jobs:
           ref: a84159688af3ca37a4be05a0d422b94451b2e24e
           path: .vendor/pixelfx
 
-      - name: Render RARE SCHOOL candidate VFX
+      - name: Render RARE SCHOOL candidate VFX and sprite sheets
         shell: bash
         working-directory: .vendor/pixelfx
         run: |
@@ -49,17 +51,26 @@ jobs:
           node tools/render.mjs ui/countdown --gif
           node tools/render.mjs ui/heart-lost --gif
           node tools/render.mjs ui/confetti --gif
+          node tools/sheets.mjs ui/countdown ui/heart-lost ui/confetti
+          test -s sheets/ui/countdown.png
+          test -s sheets/ui/countdown.json
+          test -s sheets/ui/heart-lost.png
+          test -s sheets/ui/heart-lost.json
+          test -s sheets/ui/confetti.png
+          test -s sheets/ui/confetti.json
           find records -maxdepth 4 -type f -print
+          find sheets/ui -maxdepth 2 -type f -print
 
       - name: Collect PixelFX outputs
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/pixelfx
+          mkdir -p artifacts/pixelfx/records artifacts/pixelfx/sheets
           if [ -d .vendor/pixelfx/records ]; then
-            cp -R .vendor/pixelfx/records/. artifacts/pixelfx/
+            cp -R .vendor/pixelfx/records/. artifacts/pixelfx/records/
           fi
-          find artifacts -maxdepth 5 -type f -print
+          cp -R .vendor/pixelfx/sheets/ui artifacts/pixelfx/sheets/
+          find artifacts -maxdepth 6 -type f -print
 
       - name: Upload experiment outputs
         uses: actions/upload-artifact@v4
