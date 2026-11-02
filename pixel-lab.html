@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RARE SCHOOL Pixel Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#070b14;color:#fff;font-family:Inter,system-ui,sans-serif}.wrap{max-width:1180px;margin:0 auto;padding:24px}.top{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:16px}.top h1{margin:0;font-size:24px}.top p{margin:4px 0 0;color:#9eb0cc}.badge{padding:8px 12px;border:1px solid #354a70;border-radius:999px;background:#10192b;font-size:12px}.scene{position:relative;aspect-ratio:16/9;min-height:520px;overflow:hidden;border:1px solid #31486f;border-radius:18px;background:#152033 url('assets/classroom.webp') center/cover no-repeat;box-shadow:0 24px 80px #0008}.scene:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07101b16,#07101b9e);pointer-events:none}.board{position:absolute;left:30%;top:7%;width:57%;height:27%;z-index:2;background:#143f31;border:8px solid #805a36;border-radius:8px;display:grid;place-items:center;text-align:center;padding:20px;font-size:clamp(18px,2.3vw,34px);font-weight:900}.student-slot{position:absolute;left:50%;bottom:12%;transform:translateX(-50%);z-index:5;width:230px;height:300px;display:flex;align-items:flex-end;justify-content:center}.student{position:absolute;bottom:82px;width:128px;height:144px;object-fit:contain;image-rendering:pixelated;transform:scale(2.6);transform-origin:50% 100%;filter:drop-shadow(0 7px 5px #0008)}.desk{position:absolute;bottom:0;width:220px;height:100px;border:7px solid #39271f;border-radius:14px 14px 4px 4px;background:linear-gradient(#a97242 0 22%,#6f472e 22% 100%);box-shadow:inset 0 -18px #4f3125,0 13px 18px #0006}.desk:before,.desk:after{content:"";position:absolute;bottom:-66px;width:18px;height:70px;background:#443128;border-radius:3px}.desk:before{left:22px}.desk:after{right:22px}.label{position:absolute;bottom:-44px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#0d1730;border:1px solid #3c527a;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:800}.timer{position:absolute;right:4%;top:7%;z-index:6;width:90px;height:90px;border:7px solid #56ddff;border-radius:50%;display:grid;place-items:center;background:#0a1326d9;font-size:26px;font-weight:1000}.status{position:absolute;left:4%;top:8%;z-index:6;background:#0a1326dc;border:1px solid #41577b;border-radius:12px;padding:10px 13px;font-size:12px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.panel{background:#0d1527;border:1px solid #2f4267;border-radius:14px;padding:14px}.panel h2{font-size:13px;margin:0 0 10px;color:#aecdff}.buttons{display:flex;flex-wrap:wrap;gap:8px}button{border:1px solid #425a85;background:#14213a;color:#fff;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}button:hover{background:#1b2d4e}.success{border-color:#3e9b72}.danger{border-color:#b75569}.note{margin-top:14px;color:#93a6c3;font-size:12px;line-height:1.6}.ok{color:#72e4a9}
+@media(max-width:760px){.controls{grid-template-columns:1fr}.scene{min-height:430px}.student{transform:scale(2.2)}.top{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>RARE SCHOOL · Pixel Pipeline Lab</h1><p>Pixelbolt 캐릭터 PNG + PixelFX 브라우저 VFX 실제 연결 테스트</p></div>
+    <div class="badge">experiment/pixel-pipeline</div>
+  </div>
+
+  <div class="scene" id="scene">
+    <div class="board">“세계에서 가장 많이 팔린 책은?”<br><small style="font-size:.45em;color:#b7d9ca">독립 에셋 구조 테스트</small></div>
+    <div class="status">학생 PNG / 책상 / 배경을 <b class="ok">서로 독립</b>으로 렌더링</div>
+    <div class="timer"><span id="time">10.0</span></div>
+    <div class="student-slot">
+      <img id="student" class="student" src="assets/pixelbolt/student_idle.png" alt="Pixelbolt bald student">
+      <div class="desk"></div>
+      <div id="stateLabel" class="label">student_idle.png</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <section class="panel">
+      <h2>PIXELBOLT · 학생 상태 PNG</h2>
+      <div class="buttons">
+        <button onclick="setStudent('student_idle.png')">기본</button>
+        <button onclick="setStudent('student_idle_inhale.png')">숨 들이쉼</button>
+        <button onclick="setStudent('student_idle_exhale.png')">숨 내쉼</button>
+        <button class="danger" onclick="setStudent('student_hurt_recoil.png')">실패 반동</button>
+        <button onclick="setStudent('student_hurt_recover.png')">회복</button>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>PIXELFX · 게임 연출</h2>
+      <div class="buttons">
+        <button onclick="RARE_PIXELFX.play('countdown',{x:50,y:45,scale:1.25})">3초 경고</button>
+        <button class="success" onclick="accept()">정답 / Confetti</button>
+        <button class="danger" onclick="timeout()">TIME OUT / Heart Lost</button>
+        <button onclick="startTimer()">10초 자동 테스트</button>
+      </div>
+    </section>
+  </div>
+  <div class="note">이 페이지는 최종 아트가 아니라 <b>시스템 검증용</b>이다. 현재 Pixelbolt 32×36 캐릭터는 파이프라인·투명 PNG·상태 전환이 실제로 되는지 확인하는 수준이며, 샘플 이미지와 같은 상업용 픽셀아트 퀄리티를 의미하지 않는다.</div>
+</div>
+<script>
+const student=document.getElementById('student');
+const stateLabel=document.getElementById('stateLabel');
+function setStudent(file){student.src='assets/pixelbolt/'+file;stateLabel.textContent=file}
+window.accept=function(){setStudent('student_idle_exhale.png')};
+window.timeout=function(){setStudent('student_hurt_recoil.png')};
+let timerHandle=null;
+function startTimer(){
+  clearInterval(timerHandle);
+  let t=10;
+  const el=document.getElementById('time');
+  el.textContent=t.toFixed(1);
+  setStudent('student_idle.png');
+  timerHandle=setInterval(()=>{
+    t=Math.max(0,t-.1);el.textContent=t.toFixed(1);
+    if(t<=6&&t>3)setStudent('student_idle_inhale.png');
+    if(t<=3&&t>0)setStudent('student_idle_exhale.png');
+    if(t<=0){clearInterval(timerHandle);timeout()}
+  },100);
+}
+</script>
+<script src="assets/pixelfx-runtime.js?v=2"></script>
+</body>
+</html>
