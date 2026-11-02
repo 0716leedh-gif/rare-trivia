@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-pixel-pilot:
@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout RARE SCHOOL experiment
         uses: actions/checkout@v6
+        with:
+          ref: experiment/pixel-pipeline
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
@@ -33,7 +35,6 @@ jobs:
           npx -y pixelbolt@0.11.0 render artifacts/pixelbolt/rare-student.json --out artifacts/pixelbolt/rendered
           test -s artifacts/pixelbolt/rendered/frames/stand.png
           test -s artifacts/pixelbolt/rendered/rare-school-bald-student.png
-          find artifacts/pixelbolt -maxdepth 4 -type f -print
 
       - name: Checkout PixelFX 0.3.0 source at pinned commit
         uses: actions/checkout@v6
@@ -58,10 +59,8 @@ jobs:
           test -s sheets/ui/heart-lost.json
           test -s sheets/ui/confetti.png
           test -s sheets/ui/confetti.json
-          find records -maxdepth 4 -type f -print
-          find sheets/ui -maxdepth 2 -type f -print
 
-      - name: Collect PixelFX outputs
+      - name: Collect outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -71,6 +70,33 @@ jobs:
           fi
           cp -R .vendor/pixelfx/sheets/ui artifacts/pixelfx/sheets/
           find artifacts -maxdepth 6 -type f -print
+
+      - name: Publish generated assets to experiment branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/pixelbolt
+          cp artifacts/pixelbolt/rendered/frames/stand.png assets/pixelbolt/student_idle.png
+          cp artifacts/pixelbolt/rendered/frames/idle-inhale.png assets/pixelbolt/student_idle_inhale.png
+          cp artifacts/pixelbolt/rendered/frames/idle-exhale.png assets/pixelbolt/student_idle_exhale.png
+          cp artifacts/pixelbolt/rendered/frames/hurt-recoil.png assets/pixelbolt/student_hurt_recoil.png
+          cp artifacts/pixelbolt/rendered/frames/hurt-recover.png assets/pixelbolt/student_hurt_recover.png
+          cp artifacts/pixelbolt/rendered/rare-school-bald-student.png assets/pixelbolt/rare-school-bald-student.png
+          cp artifacts/pixelbolt/rendered/rare-school-bald-student.atlas.json assets/pixelbolt/rare-school-bald-student.atlas.json
+          for fx in countdown heart-lost confetti; do
+            mkdir -p "assets/pixelfx/ui/$fx"
+            cp "artifacts/pixelfx/sheets/ui/$fx.png" "assets/pixelfx/ui/$fx/$fx.png"
+            cp "artifacts/pixelfx/sheets/ui/$fx.json" "assets/pixelfx/ui/$fx/$fx.json"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/pixelbolt assets/pixelfx/ui
+          if git diff --cached --quiet; then
+            echo "Generated assets unchanged"
+          else
+            git commit -m "Generate Pixelbolt sprites and PixelFX sheets"
+            git push origin HEAD:experiment/pixel-pipeline
+          fi
 
       - name: Upload experiment outputs
         uses: actions/upload-artifact@v4
