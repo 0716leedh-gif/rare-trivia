@@ -1,0 +1,312 @@
+{
+  "frames": {
+    "stand": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 36
+      },
+      "duration": 200,
+      "pivot": {
+        "x": 0.46875,
+        "y": 0.972222
+      },
+      "anchor": {
+        "x": 15,
+        "y": 35
+      }
+    },
+    "idle-rest": {
+      "frame": {
+        "x": 32,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 36
+      },
+      "duration": 200,
+      "pivot": {
+        "x": 0.46875,
+        "y": 0.972222
+      },
+      "anchor": {
+        "x": 15,
+        "y": 35
+      },
+      "points": {
+        "nearShinFoot": {
+          "x": 15,
+          "y": 34
+        },
+        "farShinFoot": {
+          "x": 15,
+          "y": 34
+        }
+      }
+    },
+    "idle-inhale": {
+      "frame": {
+        "x": 64,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 36
+      },
+      "duration": 200,
+      "pivot": {
+        "x": 0.46875,
+        "y": 0.972222
+      },
+      "anchor": {
+        "x": 15,
+        "y": 35
+      },
+      "points": {
+        "nearShinFoot": {
+          "x": 15,
+          "y": 34
+        },
+        "farShinFoot": {
+          "x": 15,
+          "y": 34
+        }
+      }
+    },
+    "idle-settle": {
+      "frame": {
+        "x": 96,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 36
+      },
+      "duration": 200,
+      "pivot": {
+        "x": 0.46875,
+        "y": 0.972222
+      },
+      "anchor": {
+        "x": 15,
+        "y": 35
+      },
+      "points": {
+        "nearShinFoot": {
+          "x": 15,
+          "y": 34
+        },
+        "farShinFoot": {
+          "x": 15,
+          "y": 34
+        }
+      }
+    },
+    "idle-exhale": {
+      "frame": {
+        "x": 128,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 36
+      },
+      "duration": 200,
+      "pivot": {
+        "x": 0.46875,
+        "y": 0.972222
+      },
+      "anchor": {
+        "x": 15,
+        "y": 35
+      },
+      "points": {
+        "nearShinFoot": {
+          "x": 15,
+          "y": 34
+        },
+        "farShinFoot": {
+          "x": 15,
+          "y": 34
+        }
+      }
+    },
+    "hurt-recoil": {
+      "frame": {
+        "x": 160,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 36
+      },
+      "duration": 80,
+      "pivot": {
+        "x": 0.46875,
+        "y": 1
+      },
+      "anchor": {
+        "x": 15,
+        "y": 36
+      },
+      "points": {
+        "nearShinFoot": {
+          "x": 15,
+          "y": 34
+        },
+        "farShinFoot": {
+          "x": 15,
+          "y": 34
+        }
+      }
+    },
+    "hurt-recover": {
+      "frame": {
+        "x": 192,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 36
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 36
+      },
+      "duration": 80,
+      "pivot": {
+        "x": 0.46875,
+        "y": 1
+      },
+      "anchor": {
+        "x": 15,
+        "y": 36
+      },
+      "points": {
+        "nearShinFoot": {
+          "x": 15,
+          "y": 34
+        },
+        "farShinFoot": {
+          "x": 15,
+          "y": 34
+        }
+      }
+    }
+  },
+  "animations": {
+    "idle": {
+      "frames": [
+        "idle-rest",
+        "idle-inhale",
+        "idle-settle",
+        "idle-exhale"
+      ],
+      "loop": true,
+      "duration": 800
+    },
+    "hurt": {
+      "frames": [
+        "hurt-recoil",
+        "hurt-recover"
+      ],
+      "loop": false,
+      "duration": 160
+    }
+  },
+  "meta": {
+    "app": "Pixelbolt",
+    "version": "1",
+    "image": "rare-school-bald-student.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 256,
+      "h": 36
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "idle",
+        "from": 1,
+        "to": 4,
+        "direction": "forward"
+      },
+      {
+        "name": "hurt",
+        "from": 5,
+        "to": 6,
+        "direction": "forward"
+      }
+    ]
+  }
+}
