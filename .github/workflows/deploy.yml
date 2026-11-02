@@ -54,6 +54,51 @@ jobs:
           });
           JS
 
+      - name: Setup Node.js for PixelFX
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Checkout pinned PixelFX
+        uses: actions/checkout@v6
+        with:
+          repository: patch-gg/pixelfx
+          ref: a84159688af3ca37a4be05a0d422b94451b2e24e
+          path: .vendor/pixelfx
+
+      - name: Export PixelFX sprite sheets
+        shell: bash
+        working-directory: .vendor/pixelfx
+        run: |
+          set -euo pipefail
+          npm ci
+          node tools/sheets.mjs ui/countdown ui/heart-lost ui/confetti
+          test -s sheets/ui/countdown.png
+          test -s sheets/ui/heart-lost.png
+          test -s sheets/ui/confetti.png
+
+      - name: Install PixelFX assets into game
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/pixelfx/ui/{countdown,heart-lost,confetti}
+          for fx in countdown heart-lost confetti; do
+            cp ".vendor/pixelfx/sheets/ui/${fx}.png" "assets/pixelfx/ui/${fx}/${fx}.png"
+            cp ".vendor/pixelfx/sheets/ui/${fx}.json" "assets/pixelfx/ui/${fx}/${fx}.json"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          tag='<script src="assets/pixelfx-runtime.js?v=2"></script>'
+          if tag not in s:
+              s=s.replace('</body>', tag+'</body>')
+          p.write_text(s)
+          PY
+          grep -q 'pixelfx-runtime.js' index.html
+          find assets/pixelfx -maxdepth 4 -type f -print
+          rm -rf .vendor
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
