@@ -23,7 +23,7 @@ jobs:
       - name: Checkout RARE SCHOOL experiment
         uses: actions/checkout@v6
 
-      - name: Rebuild classroom image
+      - name: Rebuild classroom image and inject experiment runtimes
         shell: bash
         run: |
           set -euo pipefail
@@ -31,22 +31,36 @@ jobs:
           cp index.html app.js style.css art-preview.html pixel-lab.html site/
           cp -R assets/. site/assets/
           cat assets/bg1.txt assets/bg2.txt assets/bg3.txt assets/bg4.txt | tr -d '\n\r\t ' | base64 --decode > site/assets/classroom.webp
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('site/index.html')
+          s=p.read_text()
+          injection='<script src="assets/pixelbolt-runtime.js?v=1"></script><script src="assets/pixelfx-runtime.js?v=2"></script>'
+          if injection not in s:
+              s=s.replace('</body>',injection+'</body>')
+          p.write_text(s)
+          PY
           test -s site/index.html
           test -s site/app.js
           test -s site/style.css
           test -s site/pixel-lab.html
           test -s site/assets/classroom.webp
+          test -s site/assets/pixelbolt-runtime.js
           test -s site/assets/pixelbolt/student_idle.png
+          test -s site/assets/pixelfx-runtime.js
           test -s site/assets/pixelfx/ui/countdown/countdown.png
           test -s site/assets/pixelfx/ui/countdown/countdown.json
           test -s site/assets/pixelfx/ui/heart-lost/heart-lost.png
           test -s site/assets/pixelfx/ui/confetti/confetti.png
+          grep -q 'pixelbolt-runtime.js' site/index.html
+          grep -q 'pixelfx-runtime.js' site/index.html
 
       - name: Static sanity checks
         shell: bash
         run: |
           set -euo pipefail
           node --check site/app.js
+          node --check site/assets/pixelbolt-runtime.js
           node --check site/assets/pixelfx-runtime.js
           python3 -m http.server 4173 --directory site >/tmp/rare-preview-http.log 2>&1 &
           server_pid=$!
@@ -55,6 +69,7 @@ jobs:
           curl --fail --silent --show-error http://127.0.0.1:4173/ >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/art-preview.html >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/pixel-lab.html >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/assets/pixelbolt-runtime.js >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/assets/pixelbolt/student_idle.png >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/assets/pixelfx/ui/countdown/countdown.json >/dev/null
 
