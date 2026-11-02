@@ -8,6 +8,7 @@ on:
       - 'app.js'
       - 'style.css'
       - 'art-preview.html'
+      - 'pixel-lab.html'
       - 'assets/**'
       - '.github/workflows/pixel-preview.yml'
   workflow_dispatch:
@@ -27,26 +28,35 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p site/assets
-          cp index.html app.js style.css art-preview.html site/
+          cp index.html app.js style.css art-preview.html pixel-lab.html site/
           cp -R assets/. site/assets/
           cat assets/bg1.txt assets/bg2.txt assets/bg3.txt assets/bg4.txt | tr -d '\n\r\t ' | base64 --decode > site/assets/classroom.webp
           test -s site/index.html
           test -s site/app.js
           test -s site/style.css
+          test -s site/pixel-lab.html
           test -s site/assets/classroom.webp
+          test -s site/assets/pixelbolt/student_idle.png
+          test -s site/assets/pixelfx/ui/countdown/countdown.png
+          test -s site/assets/pixelfx/ui/countdown/countdown.json
+          test -s site/assets/pixelfx/ui/heart-lost/heart-lost.png
+          test -s site/assets/pixelfx/ui/confetti/confetti.png
 
       - name: Static sanity checks
         shell: bash
         run: |
           set -euo pipefail
           node --check site/app.js
-          if [ -f site/assets/pixelfx-runtime.js ]; then node --check site/assets/pixelfx-runtime.js; fi
+          node --check site/assets/pixelfx-runtime.js
           python3 -m http.server 4173 --directory site >/tmp/rare-preview-http.log 2>&1 &
           server_pid=$!
           trap 'kill $server_pid 2>/dev/null || true' EXIT
           sleep 1
           curl --fail --silent --show-error http://127.0.0.1:4173/ >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/art-preview.html >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/pixel-lab.html >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/assets/pixelbolt/student_idle.png >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/assets/pixelfx/ui/countdown/countdown.json >/dev/null
 
       - name: Upload safe preview bundle
         uses: actions/upload-artifact@v4
