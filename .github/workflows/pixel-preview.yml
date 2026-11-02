@@ -1,0 +1,90 @@
+name: Deploy PixelFX gameplay preview
+
+on:
+  push:
+    branches: [experiment/pixel-pipeline]
+    paths:
+      - 'index.html'
+      - 'assets/pixelfx-runtime.js'
+      - '.github/workflows/pixel-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pixel-preview-pages
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RARE SCHOOL experiment
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Checkout pinned PixelFX
+        uses: actions/checkout@v6
+        with:
+          repository: patch-gg/pixelfx
+          ref: a84159688af3ca37a4be05a0d422b94451b2e24e
+          path: .vendor/pixelfx
+
+      - name: Export PixelFX sprite sheets
+        shell: bash
+        working-directory: .vendor/pixelfx
+        run: |
+          set -euo pipefail
+          npm ci
+          node tools/sheets.mjs ui/countdown ui/heart-lost ui/confetti
+          test -s sheets/ui/countdown.png
+          test -s sheets/ui/heart-lost.png
+          test -s sheets/ui/confetti.png
+
+      - name: Build preview site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf site
+          mkdir -p site/assets/pixelfx/ui/{countdown,heart-lost,confetti}
+          cp index.html site/index.html
+          cp assets/pixelfx-runtime.js site/assets/pixelfx-runtime.js
+          cat assets/bg1.txt assets/bg2.txt assets/bg3.txt assets/bg4.txt | tr -d '\n\r\t ' | base64 --decode > site/assets/classroom.webp
+          for fx in countdown heart-lost confetti; do
+            cp ".vendor/pixelfx/sheets/ui/${fx}.png" "site/assets/pixelfx/ui/${fx}/${fx}.png"
+            cp ".vendor/pixelfx/sheets/ui/${fx}.json" "site/assets/pixelfx/ui/${fx}/${fx}.json"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('site/index.html')
+          s=p.read_text()
+          tag='<script src="assets/pixelfx-runtime.js?v=1"></script>'
+          if tag not in s:
+              s=s.replace('</body>', tag+'</body>')
+          p.write_text(s)
+          PY
+          grep -q 'pixelfx-runtime.js' site/index.html
+          file site/assets/classroom.webp
+          find site/assets/pixelfx -type f -maxdepth 4 -print
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload preview site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy preview
+        id: deployment
+        uses: actions/deploy-pages@v4
