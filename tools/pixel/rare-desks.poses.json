@@ -1,0 +1,42 @@
+{
+  "format": "pixelforge-poses",
+  "version": 1,
+  "name": "rare-school-desks",
+  "width": 48,
+  "height": 28,
+  "palette": {
+    "k": "#1b1626",
+    "b": "#6f4b2e",
+    "e": "#9a6a3d",
+    "l": "#5b3d27",
+    "d": "#c18b52",
+    "c": "#c84e5f",
+    "g": "#72b7d8",
+    "w": "#e9f4fa",
+    "m": "#8792a6",
+    "a": "#9da8b7",
+    "r": "#e34853",
+    "q": "#d0a43a",
+    "u": "#6d355f",
+    "y": "#ffd45b"
+  },
+  "ramps": [["l","b","e"],["k","m","w"],["u","q","y"]],
+  "light": 225,
+  "parts": {
+    "desk_basic": {"rows": [
+"................................................","................................................","................................................","................................................","................................................","................................................","................................................","................................................","....eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee....","....eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee....","....eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee....","....eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee....","......bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb......","......bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb......","......bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb......","......bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb......","......bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb......","........lllll......................lllll........","........lllll......................lllll........","........lllll......................lllll........","........llllddddddddddddddddddddddddllll........","........lllll......................lllll........","........lllll......................lllll........","........lllll......................lllll........","........lllll......................lllll........","........lllll......................lllll........","................................................","................................................"],"anchor":[24,27]},
+    "desk_car": {"rows": [
+"................................................","................................................","................................................","................................................","................................................","................................................","................................................","................ggggggggggggggg.................","................ggggggggggggggg.................","............ccccgggggggggggggggcccc.............","............cwwwwwwwwccccccwwwwwwwc.............","............cwwwwwwwwccccccwwwwwwwc.............","............cwwwwwwwwccccccwwwwwwwc.............","......cccccccccccccccccccccccccccccccccccc......","......cccccccccccccccccccccccccccccccccccc......","......cccccccccccccceeeeeeeeeccccccccccccc......","......cccccccccccccceeeeeeeeeccccccccccccc......","......ccccccckcccccceeeeeeeeecccccckcccccc......","......ccccckkkkkccccccccccccccccckkkkkcccc......","......cccckkkmkkkccccccccccccccckkkmkkkccc......","......cccckkmmmkkccccccccccccccckkmmmkkccc......",".........kkmmmmmkk.............kkmmmmmkk........","..........kkmmmkk...............kkmmmkk.........","..........kkkmkkk...............kkkmkkk.........","...........kkkkk.................kkkkk..........",".............k.....................k............","................................................","................................................"],"anchor":[24,27]},
+    "desk_plane": {"rows": [
+"................................................","................................................","................................................","................................................","................................................",".......................rr.......................",".......................rr.......................","....................aaarraaa....................","....................aaarraaa....................","....................aaaaaaaa....................","....................awwwwwwa....................","...................aawwwwwwaa...................",".................aa.awwwwwwa.aa.................","........aaaaaaaaaaaaawwwwwwaaaaaaaaaaaaa........","........aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa........","........aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa........",".......aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.......","....aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...","........aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa........","..........aa........aaaaaaaa........aa..........","............aa......aaaaaaaa......aa............","..............aaa...aaaaaaaa...aaa..............",".................aa.aaaaaaaa.aa.................","...................aaaaaaaaaa...................","....................aaaaaaaa....................","................................................","................................................","................................................"],"anchor":[24,27]},
+    "desk_throne": {"rows": [
+"................................................","................................................","................................................","................................................","..............qqqqqqqqqqqqqqqqqqqq..............","..............qqqqqqyqqqqqyqqqqqqq..............","..............qqqqqyqyqqqyqyqqqqqq..............","..............qqqqqyqqyqyqqqyqqqqq..............","...........qqqqqqqyqqqqyqqqqqyqqqqqqq...........","...........qqqqqqqqqqqqqqqqqqqqqqqqqq...........","...........qqquuuuuuuuuuuuuuuuuuuuqqq...........","...........qqquuuuuuuuuuuuuuuuuuuuqqq...........","...........qqquuuuuuuuuuuuuuuuuuuuqqq...........","...........qqquuuuuuuuuuuuuuuuuuuuqqq...........","...........qqquuuuuuuuuuuuuuuuuuuuqqq...........","........qqqqqquuuuuuuuuuuuuuuuuuuuqqqqqq........","........qqqqqquuuuuuuuuuuuuuuuuuuuqqqqqq........","........qqqqqquuuuuuuuuuuuuuuuuuuuqqqqqq........","........qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq........","........qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq........","........qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq........","........qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq........","...........qqqqqqqqqqqqqqqqqqqqqqqqqq...........",".............qqqqq............qqqqq.............",".............qqqqq............qqqqq.............",".............qqqqq............qqqqq.............",".............qqqqq............qqqqq.............","................................................"],"anchor":[24,27]}
+  },
+  "poses": [
+    {"name":"basic","duration":200,"origin":[24,27],"parts":[{"name":"sprite","part":"desk_basic","at":[0,0]}]},
+    {"name":"car","duration":200,"origin":[24,27],"parts":[{"name":"sprite","part":"desk_car","at":[0,0]}]},
+    {"name":"plane","duration":200,"origin":[24,27],"parts":[{"name":"sprite","part":"desk_plane","at":[0,0]}]},
+    {"name":"throne","duration":200,"origin":[24,27],"parts":[{"name":"sprite","part":"desk_throne","at":[0,0]}]}
+  ],
+  "sheet":{"columns":4}
+}
